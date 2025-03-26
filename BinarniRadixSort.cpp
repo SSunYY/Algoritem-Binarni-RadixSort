@@ -28,7 +28,13 @@ int main(){
             C[bit++];
         }
 
-        
+        C[1] += C[0];
+        for(int i = A.size() - 1; i >= 0; i--){
+            int bit = (A[i] >> k) & 1;
+            D[--C[bit]] = A[i];
+        }
+
+        swap(A, D);
     }
 
     ofstream output("izhod.txt");
