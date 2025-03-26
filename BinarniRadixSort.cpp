@@ -20,6 +20,14 @@ int main(){
     input.close();
 
     for(int k = 0; k < 8; k++){
+        vector<int> C(2, 0);
+        vector<unsigned char> D(A.size());
+
+        for(size_t i = 0; i < A.size(); i++){
+            int bit = (A[i] >> k) & 1;
+            C[bit++];
+        }
+
         
     }
 
