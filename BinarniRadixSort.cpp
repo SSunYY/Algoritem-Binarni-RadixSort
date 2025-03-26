@@ -19,7 +19,9 @@ int main(){
     }
     input.close();
 
-
+    for(int k = 0; k < 8; k++){
+        
+    }
 
     ofstream output("izhod.txt");
     if(!output.is_open()){
