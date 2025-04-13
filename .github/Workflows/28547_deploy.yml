@@ -2,25 +2,22 @@ name: Deploy to Docker Hub
 
 on:
   workflow_run:
-    workflows: ["Run Tests"]  # Proži se ob uspešnem zaključku testov
+    workflows: ["Run Tests"] 
     types: [completed]
 
 jobs:
   deploy:
     runs-on: self-hosted
-    # Pogoji: Zaženi samo, če so testi uspeli
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
     - uses: actions/checkout@v3
 
-    # Prijava v Docker Hub
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    # Gradnja in objava Docker slike
     - name: Build and push Docker image
       uses: docker/build-push-action@v4
       with:

@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Preveri argumente za matrico
 case $1 in
   basic)
     echo "Test 1: Osnovni test..."
@@ -22,10 +21,8 @@ case $1 in
     ;;
   stress)
     echo "Test 3: Velik vnos..."
-    # Generiraj 100 naključnih števil
     for i in {1..100}; do echo $RANDOM % 256 | bc; done > vhod.txt
     ./radix_sort
-    # Preveri, ali je izhod sortiran
     sort -n vhod.txt > expected.txt
     if ! cmp --silent izhod.txt expected.txt; then
       echo "Napaka: Test 3 ni uspel."

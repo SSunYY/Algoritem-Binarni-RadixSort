@@ -2,16 +2,14 @@ name: Run Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
-  # Prvi posel: Preveri prisotnost testov in ustvari artefakt z napako
   check-test-scripts:
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v3
 
-    # Preveri, če obstaja testna skripta
     - name: Check for test scripts
       run: |
         if [ ! -f "tests.sh" ]; then
@@ -20,31 +18,26 @@ jobs:
           touch napaka.txt  # Ustvari prazno datoteko, če ni napake
         fi
 
-    # Naloži napaka.txt kot artefakt za naslednji posel
     - name: Upload error file
       uses: actions/upload-artifact@v3
       with:
         name: error-artifact
         path: napaka.txt
 
-  # Drugi posel: Poganjanje testov (odvisen od check-test-scripts)
   run-tests:
     needs: check-test-scripts
     runs-on: self-hosted
-    # Matrica za različne teste (obvezna uporaba matrix)
     strategy:
       matrix:
         test_type: [basic, edge, stress]
     steps:
     - uses: actions/checkout@v3
 
-    # Prenesi artefakt s napako
     - name: Download error artifact
       uses: actions/download-artifact@v3
       with:
         name: error-artifact
 
-    # Preveri vsebino napaka.txt
     - name: Check for errors
       run: |
         if [ -s napaka.txt ]; then
@@ -53,13 +46,11 @@ jobs:
           exit 1
         fi
 
-    # Priprava okolja (npr. namesti g++)
     - name: Set up environment
       run: |
         sudo apt-get update
         sudo apt-get install -y g++
 
-    # Kompilacija in poganjanje testov glede na matrico
     - name: Compile and run tests (${{ matrix.test_type }})
       run: |
         g++ -o radix_sort radix_sort.cpp
